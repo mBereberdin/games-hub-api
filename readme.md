@@ -1,11 +1,11 @@
-# Шаблон dotnet7 backend приложений
+# Games hub
 
 <!-- Актуализировать после импорта -->
-[![Build](https://github.com/mBereberdin/net7-template/actions/workflows/Build.yml/badge.svg)](https://github.com/mBereberdin/net7-template/actions/workflows/Build.yml)
+[![Build](https://github.com/mBereberdin/games-hub-api/actions/workflows/Build.yml/badge.svg)](https://github.com/mBereberdin/games-hub-api/actions/workflows/Build.yml)
 
 ## Описание проекта
 
-Backend приложение.
+Backend приложение для получения информации о зарегистрированных\доступных играх.
 
 ## Используемые технологии
 
