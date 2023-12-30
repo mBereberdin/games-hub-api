@@ -1,8 +1,11 @@
-namespace WebApi.Middlewares;
+namespace Infrastructure.Middlewares;
 
 using System.Text;
 
-using WebApi.Exceptions;
+using Infrastructure.Exceptions;
+
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 /// <summary>
 /// Промежуточный слой для обработки ошибок приложения.

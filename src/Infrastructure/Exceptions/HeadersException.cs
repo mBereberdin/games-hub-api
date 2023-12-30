@@ -1,4 +1,4 @@
-namespace WebApi.Exceptions;
+namespace Infrastructure.Exceptions;
 
 /// <summary>
 /// Ошибка заголовков.
