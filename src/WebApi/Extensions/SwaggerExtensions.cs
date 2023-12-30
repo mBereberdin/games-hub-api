@@ -2,11 +2,11 @@ namespace WebApi.Extensions;
 
 using System.Reflection;
 
+using Infrastructure.Exceptions;
+
 using Microsoft.OpenApi.Models;
 
 using Serilog;
-
-using WebApi.Exceptions;
 
 /// <summary>
 /// Расширения swagger.
