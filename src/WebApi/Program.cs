@@ -1,3 +1,5 @@
+using Infrastructure.Extensions;
+
 using Serilog;
 
 using WebApi.Extensions;
@@ -17,6 +19,7 @@ if (isUseSwagger)
 }
 
 builder.Services.AddControllers();
+builder.Services.AddServices();
 
 Log.Logger.Information("Конфигурация была проинициализирована.");
 
