@@ -20,6 +20,7 @@ if (isUseSwagger)
 
 builder.Services.AddControllers();
 builder.Services.AddServices();
+builder.Services.AddSettings(builder.Configuration);
 
 Log.Logger.Information("Конфигурация была проинициализирована.");
 
