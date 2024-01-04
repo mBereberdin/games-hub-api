@@ -19,6 +19,13 @@ public class RegisteredGamesVault
     /// </summary>
     private Game[] _registeredGames;
 
+    /// <summary>
+    /// Таймеры удаления игр.
+    /// </summary>
+    /// <remarks>Ключ - наименование игры; значение - источник токена отмены удаления игры.</remarks>
+    private readonly Dictionary<string, CancellationTokenSource>
+        _removeGamesTimers;
+
     /// <inheritdoc cref="RegisteredGamesVault"/>
     /// <param name="logger">Логгер.</param>
     public RegisteredGamesVault(ILogger<RegisteredGamesVault> logger)
@@ -28,9 +35,27 @@ public class RegisteredGamesVault
         _logger.LogDebug($"Инициализация: {nameof(RegisteredGamesVault)}");
 
         _registeredGames = Array.Empty<Game>();
+        _removeGamesTimers = new Dictionary<string, CancellationTokenSource>();
 
         _logger.LogDebug(
             $"{nameof(RegisteredGamesVault)} - успешно инициализирован.");
+    }
+
+    /// <summary>
+    /// Таймеры на удаление игр.
+    /// </summary>
+    public Dictionary<string, CancellationTokenSource> RemoveGamesTimers
+    {
+        get
+        {
+            _logger.LogInformation(
+                "Получение таймеров на удаление игр.");
+            _logger.LogDebug(
+                "Таймеры на удаление игр: {removeGamesTimers}.",
+                _removeGamesTimers);
+
+            return _removeGamesTimers;
+        }
     }
 
     /// <summary>
@@ -43,7 +68,8 @@ public class RegisteredGamesVault
             _logger.LogInformation(
                 "Получение зарегистрированных игр из хранилища.");
             _logger.LogDebug(
-                $"Зарегистрированные игры хранилища: {_registeredGames}.");
+                "Зарегистрированные игры хранилища: {registeredGames}.",
+                _registeredGames.ToArray<object>());
 
             return _registeredGames;
         }
@@ -60,7 +86,7 @@ public class RegisteredGamesVault
         cancellationToken.ThrowIfCancellationRequested();
 
         _logger.LogInformation("Регистрация игры в хранилище.");
-        _logger.LogDebug($"Игра: {game}.");
+        _logger.LogDebug("Игра: {game}.", game);
 
         await Task.Run(() =>
         {
@@ -70,5 +96,32 @@ public class RegisteredGamesVault
 
         _logger.LogInformation(
             "Регистрация игры в хранилище - успешно завершено.");
+    }
+
+    /// <summary>
+    /// Удалить игру.
+    /// </summary>
+    /// <param name="gameName">Наименование игры.</param>
+    /// <param name="cancellationToken">Токен отмены выполнения операции.</param>
+    public async Task RemoveGameAsync(string gameName,
+        CancellationToken cancellationToken)
+    {
+        await Task.Run(() =>
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            _logger.LogInformation(
+                "Удаление игры по наименованию из хранилища.");
+            _logger.LogDebug("Наименование игры: {gameName}.", gameName);
+
+            RemoveGamesTimers.Remove(gameName);
+
+            _registeredGames = _registeredGames.Where(registeredGame =>
+                !registeredGame.Name.Equals(gameName,
+                    StringComparison.OrdinalIgnoreCase)).ToArray();
+
+            _logger.LogInformation(
+                "Удаление игры по наименованию из хранилища - успешно завершено.");
+        }, cancellationToken);
     }
 }
