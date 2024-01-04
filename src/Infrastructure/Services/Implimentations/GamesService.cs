@@ -46,12 +46,12 @@ public class GamesService : IGamesService
         cancellationToken.ThrowIfCancellationRequested();
 
         _logger.LogInformation("Проверка не зарегистрирована ли уже игра.");
-        _logger.LogDebug("Игра: {0}", game);
+        _logger.LogDebug("Игра: {game}", game);
 
         if (IsGameRegistered(game.Name, out var registeredGame))
         {
-            _logger.LogInformation("Данная игра уже зарегистрированна.");
-            _logger.LogDebug("Игра: {0}", registeredGame);
+            _logger.LogInformation("Данная игра уже зарегистрирована.");
+            _logger.LogDebug("Игра: {registeredGame}", registeredGame);
 
             await ReplaceGameTimerAsync(registeredGame!, cancellationToken);
 
@@ -82,7 +82,7 @@ public class GamesService : IGamesService
             cancellationToken);
 
         _logger.LogInformation("Зарегистрированные игры получены успешно.");
-        _logger.LogDebug("Зарегистрированные игры: {0}.",
+        _logger.LogDebug("Зарегистрированные игры: {registeredGames}.",
             registeredGames.ToArray<object>());
 
         return registeredGames;
@@ -105,7 +105,9 @@ public class GamesService : IGamesService
                     ? deleteTime - 60
                     : deleteTime;
 
-                _logger.LogDebug("Игра: {0} удалится в: {1} сек.", gameName,
+                _logger.LogDebug(
+                    "Игра: {gameName} удалится в: {removeGameTime} сек.",
+                    gameName,
                     removeGameTime);
 
                 // TODO: придумать/найти нормальную реализацию выполнения задачи по таймеру с возможностью отмены. Кидать поток в сон - крайняя мера. 
@@ -129,7 +131,7 @@ public class GamesService : IGamesService
     public bool IsGameRegistered(string gameName,
         out Game? game)
     {
-        _logger.LogInformation("Проверка зарегистрированна ли игра.");
+        _logger.LogInformation("Проверка зарегистрирована ли игра.");
         _logger.LogDebug("Наименование игры: {gameName}.", gameName);
 
         game = _registeredGamesVault.RegisteredGames.FirstOrDefault(
@@ -139,7 +141,7 @@ public class GamesService : IGamesService
         var isGameRegistered = game is not null;
 
         _logger.LogInformation(
-            "Проверка зарегистрированна ли игра - завершено успешно.");
+            "Проверка зарегистрирована ли игра - завершено успешно.");
         _logger.LogDebug(
             "Игра с наименованием: {gameName}. - зарегистрирована: {isGameRegistered}",
             gameName, isGameRegistered);
