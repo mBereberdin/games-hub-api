@@ -116,7 +116,16 @@ public class GamesService : IGamesService
                     Thread.Sleep(TimeSpan.FromSeconds(1));
                 }
 
-                cancellationTokenSource.Token.ThrowIfCancellationRequested();
+                if (cancellationTokenSource.Token.IsCancellationRequested)
+                {
+                    cancellationTokenSource.Token
+                        .ThrowIfCancellationRequested();
+
+                    _logger.LogInformation("Таймер удаления игры отменён.");
+                    _logger.LogDebug(
+                        "Название игры, для которой был отменён таймер: {gameName}.",
+                        gameName);
+                }
 
                 await _registeredGamesVault.RemoveGameAsync(gameName,
                     cancellationToken);
