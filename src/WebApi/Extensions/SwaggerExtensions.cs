@@ -94,8 +94,8 @@ public static class SwaggerExtensions
         if (!headers.ContainsKey(HOST))
         {
             Log.Logger.Error(
-                $"Не удалось найти заголовок запроса: {HOST}. Заголовки запроса: {0}",
-                headers);
+                "Не удалось найти заголовок запроса: {host}. Заголовки запроса: {headers}",
+                HOST, headers);
 
             throw new HeadersException(
                 $"Не удалось найти заголовок запроса: {HOST}.");
@@ -104,8 +104,8 @@ public static class SwaggerExtensions
         if (!headers.ContainsKey(SERVICE_PREFIX))
         {
             Log.Logger.Error(
-                $"Не удалось найти заголовок запроса {SERVICE_PREFIX}. Заголовки запроса: {0}",
-                headers);
+                "Не удалось найти заголовок запроса {service_prefix}. Заголовки запроса: {headers}",
+                SERVICE_PREFIX, headers);
 
             throw new HeadersException(
                 $"Не удалось найти заголовок запроса: {SERVICE_PREFIX}.");
@@ -138,13 +138,14 @@ public static class SwaggerExtensions
             options.SwaggerDoc(swaggerDocName, openApiInfo);
 
             Log.Logger.Information("Swagger документ сформирован.");
-            Log.Logger.Debug("Наименование документа: {0}.", openApiInfo.Title);
+            Log.Logger.Debug("Наименование документа: {title}.",
+                openApiInfo.Title);
 
             var xmlFilename =
                 $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
 
             Log.Logger.Debug(
-                "Сформировано наименование xml файла с описанием swagger: {0}",
+                "Сформировано наименование xml файла с описанием swagger: {xmlFilename}",
                 xmlFilename);
 
 
@@ -153,7 +154,7 @@ public static class SwaggerExtensions
 
             options.IncludeXmlComments(xmlCommentsFilePath);
             Log.Logger.Debug(
-                "Сформирован путь xml файла с описанием swagger: {0}",
+                "Сформирован путь xml файла с описанием swagger: {xmlCommentsFilePath}",
                 xmlCommentsFilePath);
         });
         Log.Logger.Information("Генерация swagger добавлена.");
