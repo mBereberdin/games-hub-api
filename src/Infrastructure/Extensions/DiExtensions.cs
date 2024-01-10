@@ -1,10 +1,13 @@
 namespace Infrastructure.Extensions;
 
+using Domain.Settings;
+
 using Infrastructure.Middlewares;
 using Infrastructure.Services.Implimentations;
 using Infrastructure.Services.Interfaces;
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Serilog;
@@ -39,5 +42,21 @@ public static class DiExtensions
         services.AddSingleton<RegisteredGamesVault>();
 
         Log.Logger.Information("Сервисы добавлены.");
+    }
+
+    /// <summary>
+    /// Добавить настройки.
+    /// </summary>
+    /// <param name="services">Коллекция сервисов приложения.</param>
+    /// <param name="configuration">Конфигурация приложения.</param>
+    public static void AddSettings(this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        Log.Logger.Information("Добавление настроек.");
+
+        services.Configure<GamesTimerSettings>(
+            configuration.GetSection(nameof(GamesTimerSettings)));
+
+        Log.Logger.Information("Настройки добавлены.");
     }
 }

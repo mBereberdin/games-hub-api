@@ -81,7 +81,8 @@ public class GamesController : ControllerBase
         cancellationToken.ThrowIfCancellationRequested();
 
         _logger.LogInformation("Получен запрос на регистрацию игры.");
-        _logger.LogDebug($"Запрос регистрации игры: {registerGameDto}.");
+        _logger.LogDebug("Запрос регистрации игры: {registerGameDto}.",
+            registerGameDto);
 
         var game = registerGameDto.Adapt<Game>();
 

@@ -1,32 +1,24 @@
 namespace Domain.DTOs;
 
+using System.ComponentModel.DataAnnotations;
+
 /// <summary>
 /// ДТО зарегистрированной игры.
 /// </summary>
-public record GameDto
+/// <param name="Name">Наименование игры.</param>
+/// <param name="PreviewPicture">Изображение-предпросмотр игры.</param>
+public record GameDto(string Name, string? PreviewPicture)
 {
-    /// <inheritdoc cref="GameDto"/>
-    /// <param name="name">Наименование игры.</param>
-    /// <param name="previewPicture">Изображение-предпросмотр игры.</param>
-    public GameDto(string name, string? previewPicture)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            throw new ArgumentException(
-                "Наименование игры не должно быть пустым или состоять только из пробелов.");
-        }
-
-        Name = name;
-        PreviewPicture = previewPicture;
-    }
-
     /// <summary>
     /// Наименование игры.
     /// </summary>
-    public string Name { get; init; }
+    [Required(AllowEmptyStrings = false,
+        ErrorMessage =
+            "Наименование игры не должно быть пустым или состоять только из пробелов.")]
+    public required string Name { get; init; } = Name;
 
     /// <summary>
     /// Изображение-предпросмотр игры.
     /// </summary>
-    public string? PreviewPicture { get; init; }
+    public string? PreviewPicture { get; init; } = PreviewPicture;
 }
