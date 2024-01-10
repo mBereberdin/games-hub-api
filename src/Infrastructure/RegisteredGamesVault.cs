@@ -51,8 +51,10 @@ public class RegisteredGamesVault
             _logger.LogInformation(
                 "Получение таймеров на удаление игр.");
             _logger.LogDebug(
-                "Таймеры на удаление игр: {removeGamesTimers}.",
-                _removeGamesTimers);
+                $"Кол-во таймеров на удаление игр: {_removeGamesTimers.Count}.");
+            _logger.LogDebug(
+                "Последний таймер на удаление игры: {lastRemoveGameTimer}.",
+                _removeGamesTimers.LastOrDefault());
 
             return _removeGamesTimers;
         }
@@ -68,8 +70,10 @@ public class RegisteredGamesVault
             _logger.LogInformation(
                 "Получение зарегистрированных игр из хранилища.");
             _logger.LogDebug(
-                "Зарегистрированные игры хранилища: {registeredGames}.",
-                _registeredGames);
+                $"Кол-во зарегистрированных игр хранилища: {_registeredGames.Count}.");
+            _logger.LogDebug(
+                "Последняя зарегистрированная игра хранилища: {lastRegisteredGame}.",
+                _registeredGames.LastOrDefault());
 
             return _registeredGames;
         }
@@ -80,25 +84,28 @@ public class RegisteredGamesVault
     /// </summary>
     /// <param name="game">Игра.</param>
     /// <param name="cancellationToken">Токен отмены выполнения операции.</param>
+    /// <returns>Задачу.</returns>
     public async Task RegisterGameAsync(Game game,
         CancellationToken cancellationToken)
     {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        _logger.LogInformation("Регистрация игры в хранилище.");
-        _logger.LogDebug("Игра: {game}.", game);
-
         await Task.Run(() =>
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            _logger.LogInformation("Регистрация игры в хранилище.");
+            _logger.LogDebug("Игра: {game}.", game);
+
             if (!_registeredGames.Add(game))
             {
                 _logger.LogWarning(
-                    "Не удалось добавить игру в хранилище. Скорее всего данный элемент уже пресутствует в коллекции.");
-            }
-        }, cancellationToken);
+                    "Не удалось добавить игру в хранилище. Скорее всего данный элемент уже пресутствует в нём.");
 
-        _logger.LogInformation(
-            "Регистрация игры в хранилище - успешно завершено.");
+                return;
+            }
+
+            _logger.LogInformation(
+                "Регистрация игры в хранилище - успешно завершено.");
+        }, cancellationToken);
     }
 
     /// <summary>
@@ -106,6 +113,7 @@ public class RegisteredGamesVault
     /// </summary>
     /// <param name="gameName">Наименование игры.</param>
     /// <param name="cancellationToken">Токен отмены выполнения операции.</param>
+    /// <returns>Задачу.</returns>
     public async Task RemoveGameAsync(string gameName,
         CancellationToken cancellationToken)
     {

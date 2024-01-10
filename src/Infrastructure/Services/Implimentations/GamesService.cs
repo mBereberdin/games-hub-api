@@ -58,13 +58,11 @@ public class GamesService : IGamesService
             return;
         }
 
-
         _logger.LogInformation("Регистрация игры.");
         _logger.LogDebug("Игра: {game}", game);
 
         await _registeredGamesVault.RegisterGameAsync(game, cancellationToken);
-        RemoveGameWithTimer(game.Name,
-            cancellationToken);
+        RemoveGameWithTimer(game.Name, cancellationToken);
 
         _logger.LogInformation("Игра успешно зарегистрирована.");
     }
@@ -82,8 +80,6 @@ public class GamesService : IGamesService
             cancellationToken);
 
         _logger.LogInformation("Зарегистрированные игры получены успешно.");
-        _logger.LogDebug("Зарегистрированные игры: {registeredGames}.",
-            registeredGames.ToArray<object>());
 
         return registeredGames;
     }
@@ -107,8 +103,7 @@ public class GamesService : IGamesService
 
                 _logger.LogDebug(
                     "Игра: {gameName} удалится в: {removeGameTime} сек.",
-                    gameName,
-                    removeGameTime);
+                    gameName, removeGameTime);
 
                 // TODO: придумать/найти нормальную реализацию выполнения задачи по таймеру с возможностью отмены. Кидать поток в сон - крайняя мера. 
                 while (DateTime.Now.Second < removeGameTime)
@@ -118,13 +113,13 @@ public class GamesService : IGamesService
 
                 if (cancellationTokenSource.Token.IsCancellationRequested)
                 {
-                    cancellationTokenSource.Token
-                        .ThrowIfCancellationRequested();
-
                     _logger.LogInformation("Таймер удаления игры отменён.");
                     _logger.LogDebug(
                         "Название игры, для которой был отменён таймер: {gameName}.",
                         gameName);
+
+                    cancellationTokenSource.Token
+                        .ThrowIfCancellationRequested();
                 }
 
                 await _registeredGamesVault.RemoveGameAsync(gameName,
@@ -164,6 +159,8 @@ public class GamesService : IGamesService
     {
         await Task.Run(() =>
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             _logger.LogInformation("Замена таймера удаления игры.");
             _logger.LogDebug("Игра: {game}.", game);
 

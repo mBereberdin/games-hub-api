@@ -9,5 +9,5 @@ public record GamesTimerSettings
     /// Удалить игру после.
     /// </summary>
     /// <remarks>Указываются секунды.</remarks>
-    public int DeleteAfterTime { get; init; }
+    public int DeleteAfterTime { get; init; } = 5;
 }
